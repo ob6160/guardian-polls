@@ -8,7 +8,7 @@ import PollResults from "./PollResults";
 
 interface Props {
   poll: Poll;
-  bucket: Bucket;
+  bucket?: Bucket;
 }
 
 const headlineStyle = css`
@@ -29,8 +29,7 @@ const EndPageContent = ({ poll, bucket }: Props) => {
         <h1 css={headlineStyle}>{poll.title}</h1>
       </Container>
       <Container sideBorders topBorder>
-        <p css={paragraphStyle}>{bucket.text}</p>
-
+        {bucket && <p css={paragraphStyle}>{bucket.text}</p>}
         <Link href="/" passHref={true}>
           <Button>back to homepage</Button>
         </Link>
