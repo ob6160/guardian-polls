@@ -4,50 +4,47 @@ import {
   SvgSpinner,
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
-import { sampleResults } from "../poll-data";
-import { Poll, PollResults } from "../poll-data/types";
+import { PollPage } from "../lib/pollstate";
+import { Poll } from "../poll-data/types";
 import StatsList from "./StatsLists";
 
 interface Props {
   poll: Poll;
 }
 
-const fetchMockPollResults = async (pollId: string): Promise<PollResults> => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
+const fetcher = async (url: string): Promise<PollPage> => {
+  const res = await fetch(url);
+  const data = await res.json();
+  if (res.status !== 200) {
+    throw new Error(data.message);
+  }
 
-  return sampleResults;
+  return data as PollPage;
 };
 
 const PollResults = ({ poll }: Props) => {
-  const [results, setResult] = useState<PollResults | undefined>(undefined);
-  const [loadFailed, setLoadFailed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<PollPage | undefined>(undefined);
+  const [error, setError] = useState<PollPage | undefined>(undefined);
 
-  const requestResults = () => {
-    setIsLoading(true);
-    fetchMockPollResults(poll.id)
-      .then((data) => {
-        setResult(data);
-        setLoadFailed(false);
+  useEffect(() => {
+    fetcher(`/api/poll/${poll.id}`)
+      .then((results) => {
+        setData(results);
+        setError(undefined);
       })
-      .catch((err) => {
-        console.log(err);
-        setLoadFailed(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      .catch((error) => {
+        setError(error);
       });
-  };
+  });
 
-  useEffect(requestResults, [poll.id]);
+  const isLoading = !data && !error;
 
   return (
     <Container sideBorders topBorder>
-      {loadFailed && <InlineError>FAILED TO GET RESULTS!</InlineError>}
+      {error && <InlineError>FAILED TO GET RESULTS!</InlineError>}
       {isLoading && <SvgSpinner size="medium" />}
-      {results && <StatsList results={results} poll={poll} />}
+
+      {data && <StatsList results={data} poll={poll} />}
     </Container>
   );
 };
