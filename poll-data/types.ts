@@ -18,3 +18,10 @@ export type Poll = {
   questions: QuestionAndAnswers[];
   buckets: Bucket[];
 };
+
+export type PollResults = {
+  answerCount: number;
+  questions: {
+    [index: string]: number;
+  }[];
+};
