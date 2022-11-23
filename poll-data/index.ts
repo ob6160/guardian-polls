@@ -1,4 +1,4 @@
-import { Poll } from "./types";
+import { Poll, PollResults } from "./types";
 
 export const polls: Poll[] = [
   {
@@ -50,3 +50,11 @@ export const polls: Poll[] = [
     ],
   },
 ];
+
+export const sampleResults: PollResults = {
+  answerCount: 10,
+  questions: [
+    { "option one": 4, "option two": 3, "option three": 3 },
+    { "option one": 1, "option two": 9, "option three": 0 },
+  ],
+};

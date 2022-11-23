@@ -4,7 +4,9 @@ import {
   SvgSpinner,
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
+import { sampleResults } from "../poll-data";
 import { Poll, PollResults } from "../poll-data/types";
+import StatsList from "./StatsLists";
 
 interface Props {
   poll: Poll;
@@ -15,13 +17,7 @@ const fetchMockPollResults = async (pollId: string): Promise<PollResults> => {
     setTimeout(resolve, 2000);
   });
 
-  return {
-    answerCount: 10,
-    questions: [
-      { "option one": 4, "option two": 3, "option three": 3 },
-      { "option one": 1, "option two": 9, "option three": 0 },
-    ],
-  };
+  return sampleResults;
 };
 
 const PollResults = ({ poll }: Props) => {
@@ -50,9 +46,8 @@ const PollResults = ({ poll }: Props) => {
   return (
     <Container sideBorders topBorder>
       {loadFailed && <InlineError>FAILED TO GET RESULTS!</InlineError>}
-      {isLoading && <SvgSpinner  size='medium'/>}
-
-      {results && <pre>{JSON.stringify(results)}</pre>}
+      {isLoading && <SvgSpinner size="medium" />}
+      {results && <StatsList results={results} poll={poll} />}
     </Container>
   );
 };
