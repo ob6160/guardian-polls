@@ -41,7 +41,7 @@ export const polls: Poll[] = [
       },
       {
         id: "tory",
-        text: "You think the tories will remain in power",
+        text: "You think the tories will remain in power. In est ante in nibh mauris. Egestas pretium aenean pharetra magna ac placerat vestibulum. Eget lorem dolor sed viverra ipsum nunc. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Posuere ac ut consequat semper viverra nam. Suspendisse ultrices gravida dictum fusce ut placerat orci nulla.",
       },
       {
         id: "lib-dem",

@@ -1,4 +1,7 @@
-import { Container } from "@guardian/source-react-components";
+import { css } from "@emotion/react";
+import { space, textSans } from "@guardian/source-foundations";
+import { headline } from "@guardian/source-foundations/dist/cjs/typography/api";
+import { Button, Container } from "@guardian/source-react-components";
 import type { NextPage } from "next";
 import Link from "next/dist/client/link";
 import Head from "next/head";
@@ -12,8 +15,19 @@ interface EndPageProps {
   bucket?: Bucket;
 }
 
+const headlineStyle = css`
+  ${headline.medium({ fontWeight: "bold" })};
+  margin: 0;
+  padding: ${space[2]}px 0;
+`;
+
+const paragraphStyle = css`
+  ${textSans.large()};
+  margin: 0;
+`;
+
 const EndPage: NextPage = (props: EndPageProps) => {
-  const { pollId, poll, bucketId, bucket } = props;
+  const { pollId, poll, bucket } = props;
 
   return (
     <div>
@@ -22,15 +36,19 @@ const EndPage: NextPage = (props: EndPageProps) => {
       </Head>
 
       <main>
-        <Link href="/" passHref={true}>
-          homepage
-        </Link>
-
         {!!(poll && bucket) && (
-          <Container>
-            <p>You answered the {poll.title}.</p>
-            <p>{bucket.text}</p>
-          </Container>
+          <>
+            <Container sideBorders topBorder element="header">
+              <h1 css={headlineStyle}>{poll.title}</h1>
+            </Container>
+            <Container sideBorders topBorder>
+              <p css={paragraphStyle}>{bucket.text}</p>
+
+              <Link href="/" passHref={true}>
+                <Button>back to homepage</Button>
+              </Link>
+            </Container>
+          </>
         )}
       </main>
     </div>
