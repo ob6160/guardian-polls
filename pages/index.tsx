@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 import { headline, text } from "@guardian/source-foundations";
 import { Button } from "@guardian/source-react-components";
 import Head from "next/head";
+import { Poll } from "../components/pollEmbed";
 
 const pageTitleStyles = css`
   width: 100%;
@@ -23,6 +24,7 @@ export default function Home() {
       </Head>
       <h1 css={pageTitleStyles}>Hello world!!!!</h1>
       <Button>Begin poll??</Button>
+      <Poll />
     </>
   );
 }
