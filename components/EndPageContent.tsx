@@ -29,6 +29,7 @@ const EndPageContent = ({ poll, bucket }: Props) => {
         <h1 css={headlineStyle}>{poll.title}</h1>
       </Container>
       <Container sideBorders topBorder>
+        <p css={paragraphStyle}>{poll.endPageText}</p>
         {bucket && <p css={paragraphStyle}>{bucket.text}</p>}
         <Link href="/" passHref={true}>
           <Button>back to homepage</Button>
