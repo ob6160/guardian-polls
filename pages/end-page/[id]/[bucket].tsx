@@ -2,12 +2,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import EndPageContent from "../../../components/EndPageContent";
 import { polls } from "../../../poll-data";
-import { Bucket, Poll } from "../../../poll-data/types";
+import { Bucket, PollData } from "../../../poll-data/types";
 
 interface EndPageProps {
   pollId: string;
   bucketId: string;
-  poll?: Poll;
+  poll?: PollData;
   bucket?: Bucket;
 }
 

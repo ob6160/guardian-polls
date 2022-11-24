@@ -2,11 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import EndPageContent from "../../../components/EndPageContent";
 import { polls } from "../../../poll-data";
-import { Poll } from "../../../poll-data/types";
+import { PollData } from "../../../poll-data/types";
 
 interface EndPageProps {
   pollId: string;   
-  poll?: Poll;
+  poll?: PollData;
 }
 
 const EndPage: NextPage = (props: EndPageProps) => {

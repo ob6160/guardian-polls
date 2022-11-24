@@ -1,6 +1,6 @@
-import { Poll } from "./types";
+import { PollData } from "./types";
 
-export const polls: Poll[] = [
+export const polls: PollData[] = [
   {
     id: "test-poll",
     title: "Our test poll",

@@ -1,9 +1,8 @@
 import { Stack } from "@guardian/source-react-components";
-import { PollPage } from "../lib/pollstate";
-import { AnswerAndCount, Poll } from "../poll-data/types";
+import { AnswerAndCount } from "../poll-data/types";
 
 interface Props {
-  title: string;
+  title?: string;
   results: AnswerAndCount[];
 }
 
@@ -12,7 +11,7 @@ const StatsList = ({ results, title }: Props) => {
 
   return (
     <Stack>
-      <p>RESULTS: {title}</p>
+      {!!title &&  <p>RESULTS: {title}</p> }
       <ul>
         {results.map(({ text, id, count }) => {
           return (
