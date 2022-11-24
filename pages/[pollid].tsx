@@ -6,11 +6,11 @@ import type { PollData } from "../poll-data/types";
 
 interface QuestionPageProps {
   pollId: string;
-  poll?: PollData;
+  pollData?: PollData;
 }
 
 const QuestionPage: NextPage = (props: QuestionPageProps) => {
-  const { pollId, poll } = props;
+  const { pollId, pollData } = props;
 
   return (
     <div>
@@ -19,7 +19,7 @@ const QuestionPage: NextPage = (props: QuestionPageProps) => {
       </Head>
 
       <main>
-        <h1>{poll?.title}</h1>
+        <h1>{pollData?.title}</h1>
       </main>
     </div>
   );
@@ -28,18 +28,18 @@ const QuestionPage: NextPage = (props: QuestionPageProps) => {
 export const getStaticProps = async (context: {
   params: { pollid: string };
 }): Promise<{ props: QuestionPageProps }> => {
-  const poll = polls.find((poll) => poll.id === context.params.pollid);
+  const pollData = polls.find((poll) => poll.id === context.params.pollid);
 
   return {
     props: {
       pollId: context.params.pollid,
-      poll,
+      pollData,
     },
   };
 };
 
 export async function getStaticPaths() {
-  const paths = polls.map((poll) => `/${poll.id}`);
+  const paths = polls.map((pollData) => `/${pollData.id}`);
 
   return {
     paths,
