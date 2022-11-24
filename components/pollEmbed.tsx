@@ -2,33 +2,14 @@ import { css } from "@emotion/react";
 import {
   ChoiceCard,
   ChoiceCardGroup,
-  InlineError,
 } from "@guardian/source-react-components";
-import React from "react";
-import useSWR from "swr";
-import { combinePollAndAnswers } from "../lib/answerParsing";
+import React, { useState } from "react";
+import { PollPage, pollPageSchema } from "../lib/pollstate";
 import { PollData } from "../poll-data/types";
-import StatsList from "./StatsLists";
+import { ResultReloader } from "./ResultsReloader";
 
-const fetcher = (url) => fetch(url).then((r) => r.json());
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-function Profile(props: { pollData: PollData; answerId: string }) {
-  const { pollData, answerId } = props;
-  const voteUrl = `api/poll/${pollData.id}/vote/${answerId}`;
-  const readUrl = `api/poll/${pollData.id}`;
-
-  const { data, error } = useSWR(voteUrl, fetcher);
-  const answers = data ? combinePollAndAnswers(data, pollData) : [];
-
-  if (error)
-    return (
-      <div>
-        <InlineError>failed to load</InlineError>
-      </div>
-    );
-  if (!data) return <div>loading...</div>;
-  if (data) return <StatsList results={answers} />;
-}
 
 /** Todo:
  * accessibility?
@@ -65,16 +46,26 @@ const options = css`
 `;
 
 export const Poll: React.FC<Props> = ({ pollData }) => {
-  const [submitted, setSubmitted] = React.useState<string | undefined>(
+  const [submitted, setSubmitted] = useState<string | undefined>(undefined);
+
+  const [pollResults, setPollResults] = useState<PollPage | undefined>(
     undefined
   );
 
-  const submit = (answerId) => {
+  const submit = async (answerId) => {
     if (submitted) {
-      console.warn("ALREAY SUBMITTED");
+      return
     }
-
     setSubmitted(answerId);
+    const voteUrl = `api/poll/${pollData.id}/vote/${answerId}`;
+    const data = await fetcher(voteUrl);
+    const parsedData = pollPageSchema.safeParse(data);
+
+    if (parsedData.success) {
+      setPollResults(data as PollPage);
+    } else {
+      console.warn("DATA DID NOT PARSE");
+    }
   };
 
   const [question] = pollData.questions;
@@ -103,7 +94,13 @@ export const Poll: React.FC<Props> = ({ pollData }) => {
           ))}
         </ChoiceCardGroup>
       </div>
-      {submitted && <Profile pollData={pollData} answerId={submitted} />}
+      {pollResults && (
+        <ResultReloader
+          pollData={pollData}
+          answerId={submitted}
+          initialResults={pollResults}
+        />
+      )}
     </div>
   );
 };
