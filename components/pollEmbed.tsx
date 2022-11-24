@@ -6,6 +6,7 @@ import {
   Button,
   ChoiceCard,
   ChoiceCardGroup,
+  InlineError
 } from "@guardian/source-react-components";
 import React from "react";
 import useSWR from "swr";
@@ -16,7 +17,9 @@ function Profile() {
 
   console.log(data);
 
-  if (error) return <div>failed to load</div>;
+  if (error) return <div><InlineError>
+  failed to load
+</InlineError></div>;
   if (!data) return <div>loading...</div>;
   if (data) return <></>;
 }
