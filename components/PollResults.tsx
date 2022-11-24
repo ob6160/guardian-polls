@@ -26,6 +26,8 @@ const PollResults = ({ poll }: Props) => {
   const [data, setData] = useState<PollPage | undefined>(undefined);
   const [error, setError] = useState<PollPage | undefined>(undefined);
 
+  const isLoading = !data && !error;
+
   useEffect(() => {
     fetcher(`/api/poll/${poll.id}`)
       .then((results) => {
@@ -35,9 +37,9 @@ const PollResults = ({ poll }: Props) => {
       .catch((error) => {
         setError(error);
       });
-  });
+  }, [poll, data, error,isLoading]);
 
-  const isLoading = !data && !error;
+  
 
   return (
     <Container sideBorders topBorder>
