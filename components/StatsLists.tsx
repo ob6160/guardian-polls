@@ -1,24 +1,30 @@
 import { Stack } from "@guardian/source-react-components";
 import { PollPage } from "../lib/pollstate";
-import { Poll } from "../poll-data/types";
+import { AnswerAndCount, Poll } from "../poll-data/types";
 
 interface Props {
   poll: Poll;
-  results: PollPage;
+  results: AnswerAndCount[];
 }
 
 const StatsList = ({ results, poll }: Props) => {
-
-  const total = Object.values(results.answerVotes).reduce((sum, value) => sum + value, 0);
+  const total = results.reduce((sum, result) => sum + result.count, 0);
 
   return (
     <Stack>
       <p>RESULTS: {poll.title}</p>
       <ul>
-        {Object.entries(results.answerVotes).map(([key, value], index) => {
-          return <li key={index}>
-            <b>{key}:</b> <span>{value} / {total}</span>
-            </li>;
+        {results.map(({ text, id, count }) => {
+          // assuming 1 question per poll
+
+          return (
+            <li key={id}>
+              <b>{text}:</b>{" "}
+              <span>
+                {count} / {total}
+              </span>
+            </li>
+          );
         })}
       </ul>
     </Stack>

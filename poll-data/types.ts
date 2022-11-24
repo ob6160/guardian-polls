@@ -20,3 +20,4 @@ export type Poll = {
   buckets: Bucket[];
 };
 
+export type AnswerAndCount = Answer & { count: number };

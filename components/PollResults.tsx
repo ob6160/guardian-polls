@@ -4,32 +4,44 @@ import {
   SvgSpinner,
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
-import { PollPage } from "../lib/pollstate";
-import { Poll } from "../poll-data/types";
+import { PollPage ,pollPageSchema} from "../lib/pollstate";
+import { AnswerAndCount, Poll } from "../poll-data/types";
 import StatsList from "./StatsLists";
 
 interface Props {
   poll: Poll;
 }
 
-const fetcher = async (url: string): Promise<PollPage> => {
-  const res = await fetch(url);
+const fetcher = async (pollId: string): Promise<PollPage> => {
+  const res = await fetch(`/api/poll/${pollId}`);
   const data = await res.json();
   if (res.status !== 200) {
     throw new Error(data.message);
   }
 
+  const parsedData = pollPageSchema.safeParse(data)
+  if (!parsedData.success) {
+    throw new Error('NOT PARSED')
+  } 
   return data as PollPage;
 };
 
 const PollResults = ({ poll }: Props) => {
+  const [haveRequested, setHaveRequested] = useState(false);
   const [data, setData] = useState<PollPage | undefined>(undefined);
   const [error, setError] = useState<PollPage | undefined>(undefined);
 
   const isLoading = !data && !error;
 
   useEffect(() => {
-    fetcher(`/api/poll/${poll.id}`)
+    if (haveRequested) {
+      return;
+    }
+    setHaveRequested(true);
+
+    console.log('REQUESTING')
+
+    fetcher(poll.id)
       .then((results) => {
         setData(results);
         setError(undefined);
@@ -37,16 +49,23 @@ const PollResults = ({ poll }: Props) => {
       .catch((error) => {
         setError(error);
       });
-  }, [poll, data, error,isLoading]);
+  }, [poll, data, error, isLoading, haveRequested]);
 
-  
+  // assuming 1 question per poll
+  const result: AnswerAndCount[] = data
+    ? poll.questions[0].answers.map((answer) => {
+      console.log({data})
+        const count = data?.answerVotes[answer.id] || 0;
+        return { ...answer, count };
+      })
+    : [];
 
   return (
     <Container sideBorders topBorder>
       {error && <InlineError>FAILED TO GET RESULTS!</InlineError>}
       {isLoading && <SvgSpinner size="medium" />}
 
-      {data && <StatsList results={data} poll={poll} />}
+      {data && <StatsList results={result} poll={poll} />}
     </Container>
   );
 };
