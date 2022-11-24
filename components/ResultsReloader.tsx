@@ -16,7 +16,7 @@ export function ResultReloader(props: {
   const readUrl = `api/poll/${pollData.id}`;
 
   const { data, error } = useSWR(readUrl, fetcher);
-  const dataToUse = initialResults || data;
+  const dataToUse = data || initialResults;
   const answers = dataToUse ? combinePollAndAnswers(dataToUse, pollData) : [];
 
   return (
