@@ -10,6 +10,9 @@ import {
 } from "@guardian/source-react-components";
 import React from "react";
 import useSWR from "swr";
+import PollResultsDisplay from "./PollResultsDisplay";
+import StatsList from "./StatsLists";
+
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 function Profile() {
@@ -21,15 +24,8 @@ function Profile() {
   failed to load
 </InlineError></div>;
   if (!data) return <div>loading...</div>;
-  if (data) return <></>;
+  if (data) return <StatsList title={""} results={[]} />;
 }
-
-/** Todo:
- * accessibility?
- * next button?
- */
-
-//const Props =
 
 const wrapper = css`
   clear: left;
@@ -71,11 +67,14 @@ export const Poll: React.FC<{}> = () => {
           name="colours"
           label="What is your favourite colour?"
         >
+          <div>
+          {submitted && <Profile />}
           <ChoiceCard id="abc1" label="Red" value="Red" onClick={() => setSubmitted(true)}/>
           <ChoiceCard id="abc2" label="Blue" value="Blue" onClick={() => setSubmitted(true)}/>
+          </div>
         </ChoiceCardGroup>
         </div>
-         {submitted && <Profile />}
+
     </div>
   );
 };

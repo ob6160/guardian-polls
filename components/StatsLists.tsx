@@ -1,6 +1,8 @@
 import { Stack } from "@guardian/source-react-components";
 import { PollPage } from "../lib/pollstate";
 import { AnswerAndCount, Poll } from "../poll-data/types";
+import PollResultsDisplay from "./PollResultsDisplay";
+import ProgressBar from "./ProgressBar";
 
 interface Props {
   title: string;
@@ -11,8 +13,9 @@ const StatsList = ({ results, title }: Props) => {
   const total = results.reduce((sum, result) => sum + result.count, 0);
 
   return (
-    <Stack>
+    <><Stack>
       <p>RESULTS: {title}</p>
+      <PollResultsDisplay results={results} />
       <ul>
         {results.map(({ text, id, count }) => {
           return (
@@ -26,6 +29,7 @@ const StatsList = ({ results, title }: Props) => {
         })}
       </ul>
     </Stack>
+    </>
   );
 };
 
