@@ -4,6 +4,7 @@ import {
   SvgSpinner,
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
+import { combinePollAndAnswers } from "../lib/answerParsing";
 import { PollPage, pollPageSchema } from "../lib/pollstate";
 import { AnswerAndCount, PollData } from "../poll-data/types";
 import StatsList from "./StatsLists";
@@ -49,12 +50,8 @@ const PollResults = ({ poll }: Props) => {
       });
   }, [poll, data, error, isLoading, haveRequested]);
 
-  // assuming 1 question per poll
-  const result: AnswerAndCount[] = data
-    ? poll.questions[0].answers.map((answer) => ({
-        ...answer,
-        count: data?.answerVotes[answer.id] || 0,
-      }))
+  const answers: AnswerAndCount[] = data
+    ? combinePollAndAnswers(data, poll)
     : [];
 
   return (
@@ -62,7 +59,7 @@ const PollResults = ({ poll }: Props) => {
       {error && <InlineError>FAILED TO GET RESULTS!</InlineError>}
       {isLoading && <SvgSpinner size="medium" />}
 
-      {data && <StatsList results={result} title={poll.questions[0].text} />}
+      {data && <StatsList results={answers} title={poll.questions[0].text} />}
     </Container>
   );
 };

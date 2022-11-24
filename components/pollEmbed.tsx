@@ -6,16 +6,19 @@ import {
 } from "@guardian/source-react-components";
 import React from "react";
 import useSWR from "swr";
+import { combinePollAndAnswers } from "../lib/answerParsing";
 import { PollData } from "../poll-data/types";
+import StatsList from "./StatsLists";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function Profile(props: { pollData: PollData; answerId: string }) {
-  const voteUrl = `api/poll/${props.pollData.id}/vote/${props.answerId}`;
+  const { pollData, answerId } = props;
+  const voteUrl = `api/poll/${pollData.id}/vote/${answerId}`;
+  const readUrl = `api/poll/${pollData.id}`;
 
   const { data, error } = useSWR(voteUrl, fetcher);
-
-  console.log(data);
+  const answers = data ? combinePollAndAnswers(data, pollData) : [];
 
   if (error)
     return (
@@ -24,7 +27,7 @@ function Profile(props: { pollData: PollData; answerId: string }) {
       </div>
     );
   if (!data) return <div>loading...</div>;
-  if (data) return <></>;
+  if (data) return <StatsList results={answers} />;
 }
 
 /** Todo:
@@ -67,14 +70,12 @@ export const Poll: React.FC<Props> = ({ pollData }) => {
   );
 
   const submit = (answerId) => {
-
     if (submitted) {
-      console.warn('ALREAY SUBMITTED')
+      console.warn("ALREAY SUBMITTED");
     }
 
-    setSubmitted(answerId)
-
-  }
+    setSubmitted(answerId);
+  };
 
   const [question] = pollData.questions;
 
@@ -85,9 +86,14 @@ export const Poll: React.FC<Props> = ({ pollData }) => {
       </div>
 
       <div css={options}>
-        <ChoiceCardGroup name={pollData.id} label={question.text} disabled={!!submitted}>
+        <ChoiceCardGroup
+          name={pollData.id}
+          label={question.text}
+          disabled={!!submitted}
+        >
           {question.answers.map((answer) => (
-            <ChoiceCard disabled={!!submitted}
+            <ChoiceCard
+              disabled={!!submitted}
               key={answer.id}
               id={`${pollData.id}-${answer.id}`}
               label={answer.text}
