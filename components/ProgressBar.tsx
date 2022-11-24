@@ -1,11 +1,11 @@
 import React from "react";
 
-const ProgressBar = (props) => {
+const ProgressBar = (props:{answer: string, bgcolor:string, completed:number }) => {
     const { answer, bgcolor, completed } = props;
   
     const containerStyles = {
       height: 20,
-      width: '100%',
+      width: '80%',
       backgroundColor: "#e0e0de",
       borderRadius: 50,
       margin: 50
@@ -29,7 +29,7 @@ const ProgressBar = (props) => {
     return (
       <div style={containerStyles}>
         <div style={fillerStyles}>
-          <span style={labelStyles}>{`${completed}%`} {`${answer}`} </span>
+          <span style={labelStyles}>{`${completed.toFixed(0)}%`} {`${answer}`} </span>
         </div>
       </div>
     );

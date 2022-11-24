@@ -3,11 +3,11 @@ import { space, textSans } from "@guardian/source-foundations";
 import { headline } from "@guardian/source-foundations/dist/cjs/typography/api";
 import { Button, Container } from "@guardian/source-react-components";
 import Link from "next/dist/client/link";
-import { Poll, Bucket } from "../poll-data/types";
+import { PollData, Bucket } from "../poll-data/types";
 import PollResults from "./PollResults";
 
 interface Props {
-  poll: Poll;
+  poll: PollData;
   bucket?: Bucket;
 }
 
