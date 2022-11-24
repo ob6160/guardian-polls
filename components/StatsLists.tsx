@@ -3,20 +3,18 @@ import { PollPage } from "../lib/pollstate";
 import { AnswerAndCount, Poll } from "../poll-data/types";
 
 interface Props {
-  poll: Poll;
+  title: string;
   results: AnswerAndCount[];
 }
 
-const StatsList = ({ results, poll }: Props) => {
+const StatsList = ({ results, title }: Props) => {
   const total = results.reduce((sum, result) => sum + result.count, 0);
 
   return (
     <Stack>
-      <p>RESULTS: {poll.title}</p>
+      <p>RESULTS: {title}</p>
       <ul>
         {results.map(({ text, id, count }) => {
-          // assuming 1 question per poll
-
           return (
             <li key={id}>
               <b>{text}:</b>{" "}

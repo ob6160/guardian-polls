@@ -4,7 +4,7 @@ import {
   SvgSpinner,
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
-import { PollPage ,pollPageSchema} from "../lib/pollstate";
+import { PollPage, pollPageSchema } from "../lib/pollstate";
 import { AnswerAndCount, Poll } from "../poll-data/types";
 import StatsList from "./StatsLists";
 
@@ -13,16 +13,17 @@ interface Props {
 }
 
 const fetcher = async (pollId: string): Promise<PollPage> => {
+  console.log("REQUESTING DATA");
   const res = await fetch(`/api/poll/${pollId}`);
   const data = await res.json();
   if (res.status !== 200) {
     throw new Error(data.message);
   }
 
-  const parsedData = pollPageSchema.safeParse(data)
+  const parsedData = pollPageSchema.safeParse(data);
   if (!parsedData.success) {
-    throw new Error('NOT PARSED')
-  } 
+    throw new Error("NOT PARSED");
+  }
   return data as PollPage;
 };
 
@@ -38,9 +39,6 @@ const PollResults = ({ poll }: Props) => {
       return;
     }
     setHaveRequested(true);
-
-    console.log('REQUESTING')
-
     fetcher(poll.id)
       .then((results) => {
         setData(results);
@@ -53,11 +51,10 @@ const PollResults = ({ poll }: Props) => {
 
   // assuming 1 question per poll
   const result: AnswerAndCount[] = data
-    ? poll.questions[0].answers.map((answer) => {
-      console.log({data})
-        const count = data?.answerVotes[answer.id] || 0;
-        return { ...answer, count };
-      })
+    ? poll.questions[0].answers.map((answer) => ({
+        ...answer,
+        count: data?.answerVotes[answer.id] || 0,
+      }))
     : [];
 
   return (
@@ -65,7 +62,7 @@ const PollResults = ({ poll }: Props) => {
       {error && <InlineError>FAILED TO GET RESULTS!</InlineError>}
       {isLoading && <SvgSpinner size="medium" />}
 
-      {data && <StatsList results={result} poll={poll} />}
+      {data && <StatsList results={result} title={poll.questions[0].text} />}
     </Container>
   );
 };
