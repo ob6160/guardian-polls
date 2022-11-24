@@ -2,7 +2,8 @@ import { css } from "@emotion/react";
 import { headline, text } from "@guardian/source-foundations";
 import { Button } from "@guardian/source-react-components";
 import Head from "next/head";
-import { Poll } from "../components/pollEmbed";
+import Link from "next/link";
+import { polls } from "../poll-data";
 
 const pageTitleStyles = css`
   width: 100%;
@@ -23,10 +24,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-        <main>
-          home page
-        </main>
-
+      <main>
+        <h1 css={pageTitleStyles}>Guardian poll project</h1>
+        <ul>
+          {polls.map((poll) => (
+            <li key={poll.id}>
+              <Link key={poll.id} href={`/${poll.id}`}>
+                {poll.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </main>
     </>
   );
 }

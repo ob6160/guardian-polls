@@ -24,7 +24,8 @@ export const polls: PollData[] = [
   {
     id: "politics-poll",
     title: "The Election 2024",
-    endPageText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    endPageText:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     questions: [
       {
         text: "Who will win the election?",
@@ -49,5 +50,23 @@ export const polls: PollData[] = [
         text: "You predict a lib dem victory.",
       },
     ],
+  },
+  {
+    id: "metaverse",
+    title: "Our P&E poll",
+    endPageText:
+      "Okay, like the 2020 US election, these results are clearly rigged.",
+    questions: [
+      {
+        text: "Should the Guardian join the metaverse",
+        answers: [
+          { id: "yes", text: "Yes" },
+          { id: "no", text: "No" },
+        ],
+      },
+    ],
+    buckets: [
+  
+    ]
   },
 ];
