@@ -18,7 +18,7 @@ const EndPage: NextPage = (props: EndPageProps) => {
   return (
     <div>
       <Head>
-        <title>Poll - {pollId}</title>
+        <title>{`poll: ${pollId}`}</title>
       </Head>
 
       <main>

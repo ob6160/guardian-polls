@@ -1,4 +1,4 @@
-import { Poll, PollResults } from "./types";
+import { Poll } from "./types";
 
 export const polls: Poll[] = [
   {
@@ -8,7 +8,10 @@ export const polls: Poll[] = [
     questions: [
       {
         text: "Who will win the world cup?",
-        answers: [{ text: "France" }, { text: "IDK" }],
+        answers: [
+          { id: "fr", text: "France" },
+          { id: "idk", text: "IDK" },
+        ],
       },
     ],
     buckets: [
@@ -26,14 +29,10 @@ export const polls: Poll[] = [
       {
         text: "Who will win the election?",
         answers: [
-          { text: "Labour" },
-          { text: "Conservative" },
-          { text: "Lib Dem" },
+          { id: "labour", text: "Labour to win" },
+          { id: "tory", text: "Conservatives to win" },
+          { id: "libdem", text: "Liberal Democrats will win" },
         ],
-      },
-      {
-        text: "Will things get better?",
-        answers: [{ text: "Yes" }, { text: "No" }, { text: "Don't know" }],
       },
     ],
     buckets: [
@@ -52,11 +51,3 @@ export const polls: Poll[] = [
     ],
   },
 ];
-
-export const sampleResults: PollResults = {
-  answerCount: 10,
-  questions: [
-    { "option one": 4, "option two": 3, "option three": 3 },
-    { "option one": 1, "option two": 9, "option three": 0 },
-  ],
-};

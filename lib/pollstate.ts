@@ -1,12 +1,12 @@
 import { Redis } from "ioredis";
 import { z } from "zod";
 
-const pollPageSchema = z.object({
+export const pollPageSchema = z.object({
   id: z.string().min(1),
   answerVotes: z.record(z.number().min(0)),
 });
 
-type PollPage = z.infer<typeof pollPageSchema>;
+export type PollPage = z.infer<typeof pollPageSchema>;
 
 export const upsertPollPage = async (
   redis: Redis,

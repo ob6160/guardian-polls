@@ -1,4 +1,5 @@
 export type Answer = {
+  id: string;
   text: string;
 };
 
@@ -20,9 +21,4 @@ export type Poll = {
   buckets: Bucket[];
 };
 
-export type PollResults = {
-  answerCount: number;
-  questions: {
-    [index: string]: number;
-  }[];
-};
+export type AnswerAndCount = Answer & { count: number };

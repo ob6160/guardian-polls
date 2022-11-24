@@ -1,51 +1,30 @@
-import { Container, Stack } from "@guardian/source-react-components";
-
-import { Poll, PollResults } from "../poll-data/types";
+import { Stack } from "@guardian/source-react-components";
+import { PollPage } from "../lib/pollstate";
+import { AnswerAndCount, Poll } from "../poll-data/types";
 
 interface Props {
-  poll: Poll;
-  results: PollResults;
+  title: string;
+  results: AnswerAndCount[];
 }
 
-const StatsList = ({ results, poll }: Props) => {
-  const getQuestionText = (questionIndex: number) => {
-    return (
-      poll.questions[questionIndex]?.text || `QUESTION ${questionIndex + 1}`
-    );
-  };
-
-  const getAnswerText = (questionIndex: number, optionIndex: number) => {
-    
-    // because the poll won't match the mocked sample data
-    try {
-      const question = poll.questions[questionIndex];
-      const answer = question.answers[optionIndex];
-      return answer?.text;
-    } catch {
-      return `ANSWER ${optionIndex}`;
-    }
-  };
+const StatsList = ({ results, title }: Props) => {
+  const total = results.reduce((sum, result) => sum + result.count, 0);
 
   return (
     <Stack>
-      <p>RESULTS</p>
-      {results.questions.map((question, questionIndex) => (
-        <div key={questionIndex}>
-          <p>{getQuestionText(questionIndex)} </p>
-
-          {/* TO DO - map safely over the Poll rather than the results when the real dta format is in place */}
-          <ul>
-            {Object.entries(question).map(([optionKey, count], optionIndex) => (
-              <li key={optionIndex}>
-                <span>
-                  {getAnswerText(questionIndex, optionIndex)}: {count} /{" "}
-                  {results.answerCount}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <p>RESULTS: {title}</p>
+      <ul>
+        {results.map(({ text, id, count }) => {
+          return (
+            <li key={id}>
+              <b>{text}:</b>{" "}
+              <span>
+                {count} / {total}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
     </Stack>
   );
 };

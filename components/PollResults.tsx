@@ -4,50 +4,65 @@ import {
   SvgSpinner,
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
-import { sampleResults } from "../poll-data";
-import { Poll, PollResults } from "../poll-data/types";
+import { PollPage, pollPageSchema } from "../lib/pollstate";
+import { AnswerAndCount, Poll } from "../poll-data/types";
 import StatsList from "./StatsLists";
 
 interface Props {
   poll: Poll;
 }
 
-const fetchMockPollResults = async (pollId: string): Promise<PollResults> => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
+const fetcher = async (pollId: string): Promise<PollPage> => {
+  console.log("REQUESTING DATA");
+  const res = await fetch(`/api/poll/${pollId}`);
+  const data = await res.json();
+  if (res.status !== 200) {
+    throw new Error(data.message);
+  }
 
-  return sampleResults;
+  const parsedData = pollPageSchema.safeParse(data);
+  if (!parsedData.success) {
+    throw new Error("NOT PARSED");
+  }
+  return data as PollPage;
 };
 
 const PollResults = ({ poll }: Props) => {
-  const [results, setResult] = useState<PollResults | undefined>(undefined);
-  const [loadFailed, setLoadFailed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [haveRequested, setHaveRequested] = useState(false);
+  const [data, setData] = useState<PollPage | undefined>(undefined);
+  const [error, setError] = useState<PollPage | undefined>(undefined);
 
-  const requestResults = () => {
-    setIsLoading(true);
-    fetchMockPollResults(poll.id)
-      .then((data) => {
-        setResult(data);
-        setLoadFailed(false);
+  const isLoading = !data && !error;
+
+  useEffect(() => {
+    if (haveRequested) {
+      return;
+    }
+    setHaveRequested(true);
+    fetcher(poll.id)
+      .then((results) => {
+        setData(results);
+        setError(undefined);
       })
-      .catch((err) => {
-        console.log(err);
-        setLoadFailed(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      .catch((error) => {
+        setError(error);
       });
-  };
+  }, [poll, data, error, isLoading, haveRequested]);
 
-  useEffect(requestResults, [poll.id]);
+  // assuming 1 question per poll
+  const result: AnswerAndCount[] = data
+    ? poll.questions[0].answers.map((answer) => ({
+        ...answer,
+        count: data?.answerVotes[answer.id] || 0,
+      }))
+    : [];
 
   return (
     <Container sideBorders topBorder>
-      {loadFailed && <InlineError>FAILED TO GET RESULTS!</InlineError>}
+      {error && <InlineError>FAILED TO GET RESULTS!</InlineError>}
       {isLoading && <SvgSpinner size="medium" />}
-      {results && <StatsList results={results} poll={poll} />}
+
+      {data && <StatsList results={result} title={poll.questions[0].text} />}
     </Container>
   );
 };
