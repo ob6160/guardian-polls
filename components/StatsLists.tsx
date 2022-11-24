@@ -1,6 +1,6 @@
 import { Stack } from "@guardian/source-react-components";
 import { PollPage } from "../lib/pollstate";
-import { AnswerAndCount, Poll } from "../poll-data/types";
+import { AnswerAndCount, PollData } from "../poll-data/types";
 
 interface Props {
   title: string;

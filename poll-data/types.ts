@@ -13,7 +13,7 @@ export type Bucket = {
   text: string;
 };
 
-export type Poll = {
+export type PollData = {
   id: string;
   title: string;
   endPageText: string;

@@ -5,11 +5,11 @@ import {
 } from "@guardian/source-react-components";
 import { useEffect, useState } from "react";
 import { PollPage, pollPageSchema } from "../lib/pollstate";
-import { AnswerAndCount, Poll } from "../poll-data/types";
+import { AnswerAndCount, PollData } from "../poll-data/types";
 import StatsList from "./StatsLists";
 
 interface Props {
-  poll: Poll;
+  poll: PollData;
 }
 
 const fetcher = async (pollId: string): Promise<PollPage> => {
