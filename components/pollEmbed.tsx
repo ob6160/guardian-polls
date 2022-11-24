@@ -1,25 +1,28 @@
 import { css } from "@emotion/react";
-import { neutral, news, textSans } from "@guardian/source-foundations";
 import {
-  RadioGroup,
-  Radio,
-  Button,
   ChoiceCard,
   ChoiceCardGroup,
-  InlineError
+  InlineError,
 } from "@guardian/source-react-components";
 import React from "react";
 import useSWR from "swr";
+import { PollData } from "../poll-data/types";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
-function Profile() {
-  const { data, error } = useSWR("/api/poll/colour/vote/q1", fetcher);
+
+function Profile(props: { pollData: PollData; answerId: string }) {
+  const voteUrl = `api/poll/${props.pollData.id}/vote/${props.answerId}`;
+
+  const { data, error } = useSWR(voteUrl, fetcher);
 
   console.log(data);
 
-  if (error) return <div><InlineError>
-  failed to load
-</InlineError></div>;
+  if (error)
+    return (
+      <div>
+        <InlineError>failed to load</InlineError>
+      </div>
+    );
   if (!data) return <div>loading...</div>;
   if (data) return <></>;
 }
@@ -29,7 +32,9 @@ function Profile() {
  * next button?
  */
 
-//const Props =
+type Props = {
+  pollData: PollData;
+};
 
 const wrapper = css`
   clear: left;
@@ -54,28 +59,45 @@ const options = css`
   padding-left: 8px;
   padding-right: 8px;
   background-color: #f6f6f6;
-
 `;
 
-export const Poll: React.FC<{}> = () => {
-  const [submitted, setSubmitted] = React.useState(false);
+export const Poll: React.FC<Props> = ({ pollData }) => {
+  const [submitted, setSubmitted] = React.useState<string | undefined>(
+    undefined
+  );
+
+  const submit = (answerId) => {
+
+    if (submitted) {
+      console.warn('ALREAY SUBMITTED')
+    }
+
+    setSubmitted(answerId)
+
+  }
+
+  const [question] = pollData.questions;
 
   return (
     <div css={wrapper}>
       <div css={boilerplate}>
-        <h2>Have your say...</h2>
+        <h2>{pollData.title}</h2>
       </div>
 
       <div css={options}>
-        <ChoiceCardGroup
-          name="colours"
-          label="What is your favourite colour?"
-        >
-          <ChoiceCard id="abc1" label="Red" value="Red" onClick={() => setSubmitted(true)}/>
-          <ChoiceCard id="abc2" label="Blue" value="Blue" onClick={() => setSubmitted(true)}/>
+        <ChoiceCardGroup name={pollData.id} label={question.text} disabled={!!submitted}>
+          {question.answers.map((answer) => (
+            <ChoiceCard disabled={!!submitted}
+              key={answer.id}
+              id={`${pollData.id}-${answer.id}`}
+              label={answer.text}
+              value={answer.id}
+              onClick={() => submit(answer.id)}
+            />
+          ))}
         </ChoiceCardGroup>
-        </div>
-         {submitted && <Profile />}
+      </div>
+      {submitted && <Profile pollData={pollData} answerId={submitted} />}
     </div>
   );
 };

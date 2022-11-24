@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { Poll } from "../components/pollEmbed";
 
 import { polls } from "../poll-data";
 import type { PollData } from "../poll-data/types";
@@ -15,11 +16,11 @@ const QuestionPage: NextPage = (props: QuestionPageProps) => {
   return (
     <div>
       <Head>
-        <title>Poll - {pollId}</title>
+        <title>{`Poll - ${pollId}`}</title>
       </Head>
 
       <main>
-        <h1>{pollData?.title}</h1>
+        <Poll pollData={pollData} />
       </main>
     </div>
   );
