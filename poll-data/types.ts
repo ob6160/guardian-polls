@@ -16,6 +16,7 @@ export type Bucket = {
 export type Poll = {
   id: string;
   title: string;
+  endPageText: string;
   questions: QuestionAndAnswers[];
   buckets: Bucket[];
 };
