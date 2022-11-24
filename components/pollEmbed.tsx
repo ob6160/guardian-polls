@@ -1,7 +1,25 @@
 import { css } from "@emotion/react";
 import { neutral, news, textSans } from "@guardian/source-foundations";
-import { RadioGroup, Radio } from "@guardian/source-react-components";
+import {
+  RadioGroup,
+  Radio,
+  Button,
+  ChoiceCard,
+  ChoiceCardGroup,
+} from "@guardian/source-react-components";
 import React from "react";
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
+function Profile() {
+  const { data, error } = useSWR("/api/poll/colour/vote/q1", fetcher);
+
+  console.log(data);
+
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
+  if (data) return <></>;
+}
 
 /** Todo:
  * accessibility?
@@ -35,23 +53,48 @@ const options = css`
   background-color: #f6f6f6;
 `;
 
-export const Poll: React.FC<{}> = () => (
-  <div css={wrapper}>
-    <div css={boilerplate}>
-      <h2>Have your say...</h2>
-    </div>
+export const Poll: React.FC<{}> = () => {
+  const [submitted, setSubmitted] = React.useState(false);
 
-    <div css={options}>
-      <RadioGroup
-        error=""
-        label="What is your favourite colour?"
-        name="colours"
-        orientation="vertical"
-        supporting=""
+  return (
+    <div css={wrapper}>
+      <div css={boilerplate}>
+        <h2>Have your say...</h2>
+      </div>
+
+      <div css={options}>
+        <ChoiceCardGroup
+          columns={1}
+          name="colours"
+          label="What is your favourite colour?"
+        >
+          <ChoiceCard id="abc1" label="Red" value="Red" />
+          <ChoiceCard id="abc2" label="Blue" value="Blue" />
+        </ChoiceCardGroup>
+
+        {/* <RadioGroup
+          error=""
+          label="What is your favourite colour?"
+          name="colours"
+          orientation="vertical"
+          supporting=""
+        >
+          <Radio label="Red" supporting="" value="red" />
+          <Radio label="Blue" value="blue" />
+        </RadioGroup>
+      */}
+      </div>
+      
+      <Button
+        iconSide="left"
+        priority="primary"
+        size="default"
+        onClick={() => setSubmitted(true)}
       >
-        <Radio label="Red" supporting="" value="red" />
-        <Radio label="Blue" value="blue" />
-      </RadioGroup>
+        Submit
+      </Button>
+
+      {submitted && <Profile />}
     </div>
-  </div>
-);
+  );
+};
