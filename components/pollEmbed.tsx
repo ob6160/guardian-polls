@@ -68,33 +68,11 @@ export const Poll: React.FC<{}> = () => {
           name="colours"
           label="What is your favourite colour?"
         >
-          <ChoiceCard id="abc1" label="Red" value="Red" />
-          <ChoiceCard id="abc2" label="Blue" value="Blue" />
+          <ChoiceCard id="abc1" label="Red" value="Red" onClick={() => setSubmitted(true)}/>
+          <ChoiceCard id="abc2" label="Blue" value="Blue" onClick={() => setSubmitted(true)}/>
         </ChoiceCardGroup>
-
-        {/* <RadioGroup
-          error=""
-          label="What is your favourite colour?"
-          name="colours"
-          orientation="vertical"
-          supporting=""
-        >
-          <Radio label="Red" supporting="" value="red" />
-          <Radio label="Blue" value="blue" />
-        </RadioGroup>
-      */}
-      </div>
-      
-      <Button
-        iconSide="left"
-        priority="primary"
-        size="default"
-        onClick={() => setSubmitted(true)}
-      >
-        Submit
-      </Button>
-
-      {submitted && <Profile />}
+        </div>
+         {submitted && <Profile />}
     </div>
   );
 };
