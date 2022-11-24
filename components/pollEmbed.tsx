@@ -54,6 +54,7 @@ const options = css`
   padding-left: 8px;
   padding-right: 8px;
   background-color: #f6f6f6;
+
 `;
 
 export const Poll: React.FC<{}> = () => {
@@ -67,7 +68,6 @@ export const Poll: React.FC<{}> = () => {
 
       <div css={options}>
         <ChoiceCardGroup
-          columns={1}
           name="colours"
           label="What is your favourite colour?"
         >
