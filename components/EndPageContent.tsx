@@ -37,6 +37,23 @@ const EndPageContent = ({ poll, bucket }: Props) => {
       </Container>
 
       <PollResults poll={poll} />
+
+      {poll.id === "metaverse" && (
+        <Container sideBorders topBorder>
+          <p>Thanks for your response!</p>
+          <p>
+            Continue the discussion in our comments section below or{" "}
+            <Link href="https://www.theguardian.com/info/2022/sep/20/sign-up-for-the-techscape-newsletter-our-free-technology-email">
+              <span style={{ textDecoration: "underline" }}>
+                sign up to Techscape
+              </span>
+            </Link>
+            , our free technology newsletter, for more insight.{" "}
+          </p>
+
+          <iframe style={{width:'100%', border:'none'}} src="https://www.theguardian.com/email/form/plain/tech-scape"></iframe>
+        </Container>
+      )}
     </>
   );
 };
